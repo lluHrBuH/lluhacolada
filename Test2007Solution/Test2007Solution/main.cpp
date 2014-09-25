@@ -1,4 +1,10 @@
-#define _CRT_SECURE_NO_WARNINGS
+//{=================================================================================
+//! @file    main.cpp
+//! @date    2014.09.26 01:11
+//! @author  Vlad Bondarenko <lluhacolada@gmail.com>
+//!
+//! Home work from 22.09.2014
+//}=================================================================================
 #include <stdio.h>
 #include <process.h>
 #include <math.h>
@@ -6,45 +12,198 @@
 #include <float.h>
 
 
-#define MAX_PRIME 65000
 #ifdef _DEBUG
-#define DBG printf("#");
+	#define DBG printf("#"),
 #else
-#define DBG if(0)
+	#define DBG if(0)
 #endif 
 
+#ifndef NDEBUG
+#define ASSERT(cond)	 if(!cond)\
+							printf("Fail: %s, int %s %d %s\n",\
+							#cond,__FILE__,__LINE__,\
+							__FUNCTION__);
+#else
+#define ASSERT(cond) ;
+#endif
+
+//Check symbol is alphabet (using ASCII code)
 #define CHECKISALPHABET(cond) ((65<=(int)(cond) && (int)(cond)<=90)||(97<=(int)(cond)&&(int)(cond)<=122))
+
 #define SQR(cond) ((cond)*(cond))
 
+//Max prime number < 2^16
+#define MAX_PRIME 65521
+
+//{=================================================================================
+//! SelectTask - Selection problem to solution       
+//}=================================================================================
+int SelectTask();
+
+//{=================================================================================
+//! Task_4C_InvertWords - invert all worlds in string except symbols. 
+//!
+//! @note  Input release inside function       
+//}=================================================================================
 void Task_4C_InvertWords();
+
+//{=================================================================================
+//! Task_1C_Weighting -  check, is posible to weighting with weights (1, 4^1, 4^2 ...)
+//! 
+//! @note  Input release inside function                
+//}=================================================================================
 void Task_1C_Weighting();
+//{=================================================================================
+//! CheckWeight - main function of Task_1C_Weighting
+//!
+//! @param      n	what weight it is necessary to weigh	 
+//!
+//! @return         True - when possible; False - when inpossible         
+//}=================================================================================
 bool CheckWeight(int n);
+
+//{=================================================================================
+//! Task_3C_SumOf_4_Squares - decomposition number into four square      
+//!
+//! @note  Input release inside function          
+//}=================================================================================
 void Task_3C_SumOf_4_Squares();
-void PrimeNumberMassGenerator(int primeNumber[]);
+
+
+//{=================================================================================
+//! Task_2C_NPrimeNumber - calculation of N-th prime number        
+//!
+//! @note  Input release inside function              
+//}=================================================================================
 void Task_2C_NPrimeNumber();
+//{=================================================================================
+//! PrimeNumberMassGenerator - Generator prime number (using Sieve of Eratosthenes)
+//!
+//! @param      primeNumber[] Array which records prime number
+//!
+//! @param[out] primeNumber[] Array with prime number until 65521       
+//}=================================================================================
+void PrimeNumberMassGenerator(int primeNumber[]);
+
+//{=================================================================================
+//! Task_6C_NumberOfSquareFree - Finding the numbers of divisors which are not squares        
+//!
+//! @note  Input release inside function           
+//}=================================================================================
 void Task_6C_NumberOfSquareFree();
+
+//{=================================================================================
+//! Task_8B_IsSquare - Check number is square       
+//!
+//! @note  Input release inside function           
+//}=================================================================================
 void Task_8B_IsSquare();
+//{=================================================================================
+//! is_square - function check checks whether the number is a perfect square
+//!
+//! @param  n	number to check  
+//!
+//! @return		True - if number is a perfect square; False - other       
+//}=================================================================================
 int is_square(int n);
+
+//{=================================================================================
+//! Task_6D_NumbersOfGoodWords - Calculate the number of binary words of length n in 
+//!								which exactly k "1", and no two consecutive "1"
+//!
+//! @note   Input release inside function            
+//}=================================================================================
+void Task_1D_NumbersOfGoodWords();
+//{=================================================================================
+//! numberOfGoodWords - function Calculate the number of binary words of length n in 
+//!								which exactly k "1", and no two consecutive "1"
+//! @param      int n			length of binary words
+//! @param      int k			number of k "1" in words
+//! @param      int lastByte	last found byte in words 
+//! @param      int * result	
+//!
+//! @note           
+//}=================================================================================
+void numberOfGoodWords(int n, int k, int lastByte, int * result);
+
 
 int main()
 {
-	int numberOfProblem = -1;
-//	DBG printf("Enter number of problem (V1C = 1), (V4C = 2): \n");
-// Task_4C_InvertWords();
-//	weighting();
-//	Task_3C_SumOf_4_Squares();	
-//	Task_2C_NPrimeNumber();
-//	Task_6C_NumberOfSquareFree();
-	Task_8B_IsSquare();
-	system("pause>>void");
+	int result = 0;
+	result = SelectTask();
+	
+	if (result == 0)
+	{
+		DBG printf("Goodbye. Have a nice day/night :)\n");
+		DBG system("pause");
+		return 0;
+	}
+	else
+	{
+		DBG printf("An error has occurred! Try again later.");
+		DBG system("pause>>void");
+		return -1;
+	}
+	
+	
+}
+
+int SelectTask()
+{
+	int numberOfTask = -1;
+	printf("Write number of task to run:\n\
+		   1 - Task_1C_Weighting\n\
+		   2 - Task_2C_NPrimeNumber\n\
+		   3 - Task_3C_SumOf_4_Squares\n\
+		   4 - Task_4C_InvertWords\n\
+		   5 - Task_6C_NumberOfSquareFree\n\
+		   6 - Task_8B_IsSquare\n\
+		   7 - Task_1D_NumbersOfGoodWords\n");
+	scanf("%d", &numberOfTask);
+	switch (numberOfTask)
+	{
+	case 	1: {DBG printf("Your chose: Task_1C_Weighting\n"); Task_1C_Weighting(); break; }
+	case 	2: {DBG printf("Your chose: Task_2C_NPrimeNumber\n"); Task_2C_NPrimeNumber(); break; }
+	case	3: {DBG printf("Your chose: Task_3C_SumOf_4_Squares\n"); Task_3C_SumOf_4_Squares(); break; }
+	case	4: {DBG printf("Your chose: Task_4C_InvertWords\n"); Task_4C_InvertWords(); break; }
+	case	5: {DBG printf("Your chose: Task_6C_NumberOfSquareFree\n"); Task_6C_NumberOfSquareFree(); break; }
+	case	6: {DBG printf("Your chose: Task_8B_IsSquare\n"); Task_8B_IsSquare(); break; }
+	case	7: {DBG printf("Your chose: Task_1D_NumbersOfGoodWords\n"); Task_1D_NumbersOfGoodWords(); break; }
+	default: return(-1);
+	}
 	return 0;
+}
+
+void Task_1D_NumbersOfGoodWords()
+{
+	int n, k;
+	DBG printf("Enter length of words N, and number K of '1' \n");
+	scanf("%d %d", &n, &k);
+	int result = 0;
+	numberOfGoodWords(n, k, 0, &result);
+	DBG printf("Number of binary words:\n");
+	printf("%d\n", result);
+}
+void numberOfGoodWords(int n, int k, int lastByte, int * result)
+{
+	if ((n == 0) && (k == 0)) *result = *result + 1;
+	if (n > 0)
+	{
+		numberOfGoodWords(n-1, k, 0, result);
+		if ((k > 0) && (lastByte == 0)) numberOfGoodWords(n - 1, k - 1, 1, result);
+	}
+	
 }
 
 void Task_8B_IsSquare()
 {
 	int n;
+	bool isPerfectSquareExist = false;
+	bool isDebuggWord = false;
+	DBG printf("Enter the number of numbers check:\n");
 	scanf("%d", &n);
 	int numbers[100];
+	DBG printf("Enter N number to check for perfect squares:\n");
 	for (int i = 0; i < n; i++)
 	{
 		scanf("%d",&numbers[i]);
@@ -53,13 +212,28 @@ void Task_8B_IsSquare()
 	{
 		if (is_square(numbers[i]))
 		{
+			isPerfectSquareExist = true;
+			if (!isDebuggWord)
+			{
+				DBG printf("Perfect squares number:\n");
+				isDebuggWord = true;
+			}
 			printf("%d ", numbers[i]);
 		}
+	}
+	
+	if (!isPerfectSquareExist)
+	{
+		DBG printf("No perfect squares number found\n");
+	}
+	else
+	{
+		printf("\n");
 	}
 }
 int is_square(int n)
 {
-	if ((n - SQR((int)sqrt((double)n))) <= DBL_EPSILON) return 1;
+	if (n == SQR((int)sqrt((double)n))) return 1;
 	else return 0;
 }
 
@@ -71,7 +245,9 @@ void Task_6C_NumberOfSquareFree()
 	PrimeNumberMassGenerator(PrimeNumber);
 	bool noFree = false;
 	bool Free = false;
+	DBG printf("Enter a number of numbers to check is square free");
 	scanf("%d", &n);
+	DBG printf("Enter numbers to check:");
 	for (int i = 0; i < n; i++)
 	{
 		scanf("%d", &Number[i]);
@@ -104,6 +280,7 @@ void Task_6C_NumberOfSquareFree()
 		if (!noFree) { numberOfSquareFree[countOfSqureFree] = Number[i]; countOfSqureFree++; }
 		else noFree = false;
 	}
+	if (countOfSqureFree > 0) DBG printf("Numbers, square free");
 	for (int i = 0; i < countOfSqureFree; i++)
 	{
 		printf("%d ", numberOfSquareFree[i]);
@@ -134,7 +311,7 @@ void Task_2C_NPrimeNumber()
 	int n;
 	int PrimeNumber[MAX_PRIME];
 	PrimeNumberMassGenerator(PrimeNumber);
-
+	DBG printf("Enter number of prime numbers to calculate:\n");
 	scanf("%d", &n);
 	
 	int numberOfElement=2;
@@ -146,14 +323,25 @@ void Task_2C_NPrimeNumber()
 		}
 		numberOfElement++;
 	}
-	printf("%d", numberOfElement-1);
+	DBG printf("Here this number:\n");
+	printf("%d\n", numberOfElement-1);
 }
 
 void Task_1C_Weighting()
 {
 	int n = 0;
+	DBG	printf("Enter a number for 'weighing':\n");
 	scanf("%d", &n);
-	printf("%d", CheckWeight(n));
+	if (CheckWeight(n))
+	{
+		printf("YES ");
+		DBG printf("it can be weighed.\n");
+	}
+	else
+	{
+		printf("NO ");
+		DBG printf("it can`t be weighed.\n");
+	}
 	
 }
 bool CheckWeight(int n)
@@ -184,6 +372,7 @@ void Task_4C_InvertWords()
 	int wordlength[2][1000];
 	int numbOfInpCharacter = 0;
 	int numberOfWords = 0; 
+	DBG printf("Enter string to invert:\n");
 	scanf("%c", &c);
 	while ((scanf("%c",&c)) && (c!= '\n'))
 	{
@@ -213,6 +402,7 @@ void Task_4C_InvertWords()
 
 	int numbOfOutputWord = 0;
 	int i = 0;
+	DBG printf("Here inverted string:\n");
 	while (i<numbOfInpCharacter)
 	{
 		if (numberOfWords == 0)
@@ -235,13 +425,17 @@ void Task_4C_InvertWords()
 			numbOfOutputWord++;
 		}
 	}
+
+#ifdef _DEBUG
+	printf("\n");
+#endif // _DEBUG
 }
 
-void Task_3C_SumOf_4_Squares()
+void Task_3C_SumOf_4_Squares()   
 {
 	int N, a, b, c, d;
 	bool solution = false;
-
+	DBG printf("Enter number to decompose to four squares:\n");
 	scanf("%d", &N);
 
 	for (d = ((int)(sqrt(((double)N) / 2))); d <= (int)sqrt((double)N)+1; d++)
@@ -266,6 +460,7 @@ void Task_3C_SumOf_4_Squares()
 	}
 	if (solution)
 	{
-		printf("%d %d %d %d", a, b, c, d);
+		DBG printf("Here is it (n = a^2 + b^2 + c^2 + d^2):\n");
+		printf("%d %d %d %d\n", a, b, c, d);
 	}
 }
