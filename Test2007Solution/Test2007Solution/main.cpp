@@ -3,6 +3,8 @@
 #include <process.h>
 #include <math.h>
 #include <memory.h>
+#include <float.h>
+
 
 #define MAX_PRIME 65000
 #ifdef _DEBUG
@@ -12,7 +14,7 @@
 #endif 
 
 #define CHECKISALPHABET(cond) ((65<=(int)(cond) && (int)(cond)<=90)||(97<=(int)(cond)&&(int)(cond)<=122))
-
+#define SQR(cond) ((cond)*(cond))
 
 void Task_4C_InvertWords();
 void Task_1C_Weighting();
@@ -21,7 +23,8 @@ void Task_3C_SumOf_4_Squares();
 void PrimeNumberMassGenerator(int primeNumber[]);
 void Task_2C_NPrimeNumber();
 void Task_6C_NumberOfSquareFree();
-
+void Task_8B_IsSquare();
+int is_square(int n);
 
 int main()
 {
@@ -31,9 +34,33 @@ int main()
 //	weighting();
 //	Task_3C_SumOf_4_Squares();	
 //	Task_2C_NPrimeNumber();
-	Task_6C_NumberOfSquareFree();
+//	Task_6C_NumberOfSquareFree();
+	Task_8B_IsSquare();
 	system("pause>>void");
 	return 0;
+}
+
+void Task_8B_IsSquare()
+{
+	int n;
+	scanf("%d", &n);
+	int numbers[100];
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d",&numbers[i]);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (is_square(numbers[i]))
+		{
+			printf("%d ", numbers[i]);
+		}
+	}
+}
+int is_square(int n)
+{
+	if ((n - SQR((int)sqrt((double)n))) <= DBL_EPSILON) return 1;
+	else return 0;
 }
 
 void Task_6C_NumberOfSquareFree()
