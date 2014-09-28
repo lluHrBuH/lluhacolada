@@ -69,7 +69,6 @@ bool CheckWeight(int n);
 //}=================================================================================
 void Task_3C_SumOf_4_Squares();
 
-
 //{=================================================================================
 //! Task_2C_NPrimeNumber - calculation of N-th prime number        
 //!
@@ -84,6 +83,13 @@ void Task_2C_NPrimeNumber();
 //! @param[out] primeNumber[] Array with prime number until 65521       
 //}=================================================================================
 void PrimeNumberMassGenerator(int primeNumber[]);
+
+//{=================================================================================
+//! Task_3B_PrintPrimeNumber - Print N prime numbers
+//!
+//! @note    Input release inside function         
+//}=================================================================================
+void Task_3B_PrintPrimeNumber();
 
 //{=================================================================================
 //! Task_6C_NumberOfSquareFree - Finding the numbers of divisors which are not squares        
@@ -126,6 +132,19 @@ void Task_1D_NumbersOfGoodWords();
 //}=================================================================================
 void numberOfGoodWords(int n, int k, int lastByte, int * result);
 
+//{=================================================================================
+//! Task_10C_SumOfTwoBigByteNumbers - Summa of two big byte numbers
+//!
+//! @note	Input release inside function        
+//}=================================================================================
+void Task_10C_SumOfTwoBigByteNumbers();
+
+//{=================================================================================
+//! Task_5B_SummaDividers - Summa of all dividers of number
+//!
+//! @note	Input release inside function              
+//}=================================================================================
+void Task_5B_SummaDividers();
 
 int main()
 {
@@ -158,7 +177,10 @@ int SelectTask()
 		   4 - Task_4C_InvertWords\n\
 		   5 - Task_6C_NumberOfSquareFree\n\
 		   6 - Task_8B_IsSquare\n\
-		   7 - Task_1D_NumbersOfGoodWords\n");
+		   7 - Task_1D_NumbersOfGoodWords\n\
+		   8 - Task_3B_PrintPrimeNumber\n\
+		   9 - Task_10C_SumOfTwoBigByteNumbers\n\
+		   10 - Task_5B_SummaDividers\n");
 	scanf("%d", &numberOfTask);
 	switch (numberOfTask)
 	{
@@ -169,9 +191,118 @@ int SelectTask()
 	case	5: {DBG printf("Your chose: Task_6C_NumberOfSquareFree\n"); Task_6C_NumberOfSquareFree(); break; }
 	case	6: {DBG printf("Your chose: Task_8B_IsSquare\n"); Task_8B_IsSquare(); break; }
 	case	7: {DBG printf("Your chose: Task_1D_NumbersOfGoodWords\n"); Task_1D_NumbersOfGoodWords(); break; }
+	case    8: {DBG printf("Your chose: Task_3B_PrintPrimeNumber\n"); Task_3B_PrintPrimeNumber(); break; }
+	case	9: {DBG printf("Your chose: Task_10C_SumOfTwoBigByteNumbers\n"); Task_10C_SumOfTwoBigByteNumbers(); break; }
+	case   10: {DBG printf("Your chose: Task_5B_SummaDividers\n");  Task_5B_SummaDividers(); break; }
 	default: return(-1);
 	}
 	return 0;
+}
+
+void Task_5B_SummaDividers()
+{
+	int n;
+	DBG printf("Enter number to calculate summa dividers:\n");
+	scanf("%d", &n);
+	long summa = 1;
+	for (int i = 2; i <= n; i++)
+	{
+		if (n % i == 0)
+		{
+			summa += i;
+		}
+	}
+	DBG printf("Summa of dividers:\n");
+	printf("%d\n", summa);
+}
+
+void Task_10C_SumOfTwoBigByteNumbers()
+{
+	int a[2000];
+	int b[2000];
+	memset(a, 0, 2000 * sizeof(int));
+	memset(b, 0, 2000 * sizeof(int));
+	int summa[1000];
+	int lengthA = 0;
+	int lengthB = 0;
+	char c;
+	scanf("%c", &c);
+	DBG printf("Enter first number:\n");
+	while ((scanf("%c", &c)) && (c != '\n'))
+	{
+		if (int(c) == 48)	a[lengthA+1000] = 0;
+		else				a[lengthA+1000] = 1;
+		lengthA++;
+	}
+	DBG printf("Enter second number:\n");
+	while ((scanf("%c", &c)) && (c != '\n'))
+	{
+		if (int(c) == 48)	b[lengthB+1000] = 0;
+		else				b[lengthB+1000] = 1;
+		lengthB++;
+	}
+	int rank = 0;
+	int length = 0;
+	if (lengthA >= lengthB) length = lengthA;
+	else					length = lengthB;
+	for (int i = 1; i <= length; i++)
+	{
+		if ((a[1000 + lengthA - i] == 1) && (b[1000 + lengthB - i] == 1))
+		{
+			if (!rank)	summa[length - i] = 0;
+			else		summa[length - i] = 1;
+			rank = 1;
+		}
+		else
+		{
+			if (rank && ((a[1000 + lengthA - i] == 1) || (b[1000 + lengthB - i] == 1)))
+			{
+				summa[length - i] = 0;
+				rank = 1;
+			}
+			else
+			{
+				if ((rank || ((a[1000 + lengthA - i] == 1) || (b[1000 + lengthB - i] == 1))))		summa[length - i] = 1;
+				else																				summa[length - i] = 0;
+				rank = 0;
+			}
+		}
+	}
+	DBG printf("Summa of numbers:\n");
+	if (rank) printf("1");
+	for (int i = 0; i < length; i++)
+		printf("%d", summa[i]);
+	printf("\n");
+}
+
+void Task_3B_PrintPrimeNumber()
+{
+	int n;
+	int PrimeNumber[MAX_PRIME];
+	PrimeNumberMassGenerator(PrimeNumber);
+	DBG printf("Enter number of prime numbers to calculate:\n");
+	scanf("%d", &n);
+	int numberToCalculate[10000];
+	DBG printf("Enter number of prime number to calculate:\n");
+	for (int i = 0; i < n; i++)
+	{	
+		scanf("%d", &numberToCalculate[i]);
+	}
+	DBG printf("Here this number:\n");
+	for (int i = 0; i < n; i++)
+	{
+		int numberOfElement = 2;
+		int numberOfPrime = numberToCalculate[i];
+		while (numberOfPrime > 0)
+		{
+			if (PrimeNumber[numberOfElement] == 0)
+			{
+				numberOfPrime--;
+			}
+			numberOfElement++;
+		}
+		printf("%d ", numberOfElement - 1);
+	}
 }
 
 void Task_1D_NumbersOfGoodWords()
