@@ -184,14 +184,29 @@ int SelectTask()
 	scanf("%d", &numberOfTask);
 	switch (numberOfTask)
 	{
-	case 	1: {DBG printf("Your chose: Task_1C_Weighting\n"); Task_1C_Weighting(); break; }
-	case 	2: {DBG printf("Your chose: Task_2C_NPrimeNumber\n"); Task_2C_NPrimeNumber(); break; }
-	case	3: {DBG printf("Your chose: Task_3C_SumOf_4_Squares\n"); Task_3C_SumOf_4_Squares(); break; }
-	case	4: {DBG printf("Your chose: Task_4C_InvertWords\n"); Task_4C_InvertWords(); break; }
-	case	5: {DBG printf("Your chose: Task_6C_NumberOfSquareFree\n"); Task_6C_NumberOfSquareFree(); break; }
-	case	6: {DBG printf("Your chose: Task_8B_IsSquare\n"); Task_8B_IsSquare(); break; }
-	case	7: {DBG printf("Your chose: Task_1D_NumbersOfGoodWords\n"); Task_1D_NumbersOfGoodWords(); break; }
-	case    8: {DBG printf("Your chose: Task_3B_PrintPrimeNumber\n"); Task_3B_PrintPrimeNumber(); break; }
+	case 	1: {DBG printf("Your chose: Task_1C_Weighting\n");
+							Task_1C_Weighting(); 
+							break; }
+	case 	2: {DBG printf("Your chose: Task_2C_NPrimeNumber\n"); 
+							Task_2C_NPrimeNumber(); 
+							break; }
+	case	3: {DBG printf("Your chose: Task_3C_SumOf_4_Squares\n"); 
+							Task_3C_SumOf_4_Squares();
+							break; }
+	case	4: {DBG printf("Your chose: Task_4C_InvertWords\n");
+							Task_4C_InvertWords();
+							break; }
+	case	5: {DBG printf("Your chose: Task_6C_NumberOfSquareFree\n"); 
+							Task_6C_NumberOfSquareFree();
+							break; }
+	case	6: {DBG printf("Your chose: Task_8B_IsSquare\n"); 
+							Task_8B_IsSquare(); 
+							break; }
+	case	7: {DBG printf("Your chose: Task_1D_NumbersOfGoodWords\n");
+							Task_1D_NumbersOfGoodWords(); break; }
+	case    8: {DBG printf("Your chose: Task_3B_PrintPrimeNumber\n"); 
+							Task_3B_PrintPrimeNumber(); 
+							break; }
 	case	9: {DBG printf("Your chose: Task_10C_SumOfTwoBigByteNumbers\n"); Task_10C_SumOfTwoBigByteNumbers(); break; }
 	case   10: {DBG printf("Your chose: Task_5B_SummaDividers\n");  Task_5B_SummaDividers(); break; }
 	default: return(-1);
