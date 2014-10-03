@@ -160,6 +160,15 @@ void Onegin()
 			printToFile(linesOfSortText, numberOfLines);
 			printToFile(linesOfInvertSortText, numberOfLines);
 		}
+		free(textOnegin);
+		textOnegin = NULL;
+		free(originalText);
+		originalText = NULL;
+		free(linesOfSortText);
+		linesOfSortText = NULL;
+		free(linesOfInvertSortText);
+		linesOfInvertSortText = NULL;
+
 	}
 	else
 	{
