@@ -4,13 +4,16 @@
 #include <locale>	
 #include <assert.h>
 
-#define isNSymbol(x) ((128<=(unsigned char)(x)))
+#define isNSymbol(x) ((128 <= (unsigned char)(x)))
 
 #ifdef _DEBUG
 #define DBG printf("#");
 #else 
 #define DBG if(0)
-#endif // _DEBUG
+#endif // _DEBUGs
+
+const char * inputFile = "onegin.txt";
+const char * outputFile = "oneginOUT.txt";
 
 //{=================================================================================
 //! Onegin - Read and sort novel "Eugene Onegin"  written by Alexander Pushkin.
@@ -37,7 +40,7 @@ char * readStringFromFile(int *textLength, int *errorNumb);
 //!
 //! @return     array of pointer to line
 //}=================================================================================
-char* * partitionToLine(char *text, int textLength, int numberOfLine);
+char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int numberOfLine);
 
 //{=================================================================================
 //! countLine - Counts the number of lines
@@ -128,10 +131,9 @@ int main()
 
 void Onegin()
 {
-	char *textOnegin;
 	int textLength;
 	int errorNumber;
-	textOnegin = readStringFromFile(&textLength, &errorNumber);
+	char* textOnegin = readStringFromFile(&textLength, &errorNumber);
 	if (!errorNumber)
 	{
 		int PrintToConsole = 0;
@@ -141,11 +143,11 @@ void Onegin()
 		int numberOfLines = countLine(textOnegin, textLength);
 
 		char* * originalText = (char* *)calloc(numberOfLines, sizeof(char* *));
-		originalText = partitionToLine(textOnegin, textLength, numberOfLines);
+		originalText = partitionToLine_and_deleteNewLineSymb(textOnegin, textLength, numberOfLines);
 
 		char* * linesOfSortText = (char* *)calloc(numberOfLines, sizeof(char* *));
 		linesOfSortText = sortLineAlphabet(originalText, numberOfLines);
-
+		 
 		char* * linesOfInvertSortText = (char* *)calloc(numberOfLines, sizeof(char* *));
 		linesOfInvertSortText = sortLineInvert(originalText, numberOfLines);
 		if (PrintToConsole == 1)
@@ -160,12 +162,16 @@ void Onegin()
 			printToFile(linesOfSortText, numberOfLines);
 			printToFile(linesOfInvertSortText, numberOfLines);
 		}
+
 		free(textOnegin);
 		textOnegin = NULL;
+
 		free(originalText);
 		originalText = NULL;
+
 		free(linesOfSortText);
 		linesOfSortText = NULL;
+
 		free(linesOfInvertSortText);
 		linesOfInvertSortText = NULL;
 
@@ -178,7 +184,7 @@ void Onegin()
 
 void printToFile(char* * arrayOfText, int numberOfLines)
 {
-	FILE *f = fopen("oneginNew.txt", "a");
+	FILE *f = fopen(outputFile, "a");
 	for (int i = 0; i < numberOfLines; i++)
 	{
 		fprintf(f,"%s\n", arrayOfText[i]);
@@ -232,6 +238,7 @@ int compareInverString(const void * a, const void * b)
 	if (equivalent) { if (lengthOfString1 == lengthOfString2) return 0; }
 	else return firstString;
 }
+
 char* * sortLineInvert(char* * arrayOfTextLines, int numberOfLines)
 {
 	char * *textLines = (char * *)calloc(numberOfLines, sizeof(char *));
@@ -269,7 +276,7 @@ int countLine(char *text,int numberOfcharacter)
 	return numberOfLine;
 }
 
-char* * partitionToLine(char *text, int textLength, int numbersOfLine)
+char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int numbersOfLine)
 {
 	char *tmpText = text;
 	char * * linesOfText = (char * *)calloc(numbersOfLine, sizeof(char *));
@@ -292,7 +299,7 @@ char* * partitionToLine(char *text, int textLength, int numbersOfLine)
 
 char * readStringFromFile(int *textLength, int *errorNumb)
 {
-	FILE *f = fopen("onegin.txt", "r");
+	FILE *f = fopen(inputFile, "r");
 	if (!(f == NULL))
 	{
 		*textLength = filelength(fileno(f));
