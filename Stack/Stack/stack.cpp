@@ -33,7 +33,7 @@ int stack_Ok(stack_t *stack, int minOfElement);
 void createStack(stack_t * stack, int stackSize);
 void destroyStack(stack_t * stack);
 void stack_push(stack_t *stack, int element);
-int stack_pop(stack_t *stack);
+int * stack_pop(stack_t *stack);
 void calculator();
 int parsingInputString(char * inputString);
 
@@ -180,12 +180,8 @@ void calculator()
 		{
 			if (isStackPresent)
 			{
-				if (stack_Ok(&stack, 1))
-				{
-					int tmpNumb = stack_pop(&stack);
-					printf("Pop number from stack: %d\n", tmpNumb);
-				}
-				else (printf("Stack is corrupt!\n"));
+				if (int *tmpNumb = stack_pop(&stack))
+					printf("Pop number from stack: %d\n", *tmpNumb);
 			}
 			else (printf("Stack not exists. Type 'help' for read help\n"));
 			break;
@@ -211,57 +207,52 @@ void calculator()
 //Function to work with stack
 void stack_ADD(stack_t *stack, int numb)
 {
-	if (stack_Ok(stack, 1))
+	if (int *tmpNumb = stack_pop(stack))
 	{
-		int tmpNumb = stack_pop(stack);
-		tmpNumb += numb;
-		stack_push(stack, tmpNumb);
+		*tmpNumb += numb;
+		stack_push(stack, *tmpNumb);
 	}
-	else (printf("Stack is corrupt!\n"));
 }
 
 void stack_SUB(stack_t *stack, int numb)
 {
-	if (stack_Ok(stack, 1))
+	if (int *tmpNumb = stack_pop(stack))
 	{
-		int tmpNumb = stack_pop(stack);
-		tmpNumb -= numb;
-		stack_push(stack, tmpNumb);
+		*tmpNumb -= numb;
+		stack_push(stack, *tmpNumb);
 	}
-	else (printf("Stack is corrupt!\n"));
 }
 
 void stack_DIV(stack_t *stack, int numb)
 {
-	if (stack_Ok(stack, 1))
+	if (int *tmpNumb = stack_pop(stack))
 	{
-		int tmpNumb = stack_pop(stack);
-		tmpNumb /= numb;
-		stack_push(stack, tmpNumb);
+		if (*tmpNumb == 0)
+		{
+			*tmpNumb /= numb;
+			stack_push(stack, *tmpNumb);
+		}
+		else printf("Integer division by zero!\n");
+		
 	}
-	else (printf("Stack is corrupt!\n"));
 }
 
 void stack_MUL(stack_t *stack, int numb)
 {
-	if (stack_Ok(stack, 1))
+	if (int *tmpNumb = stack_pop(stack))
 	{
-		int tmpNumb = stack_pop(stack);
-		tmpNumb *= numb;
-		stack_push(stack, tmpNumb);
+		*tmpNumb *= numb;
+		stack_push(stack, *tmpNumb);
 	}
-	else (printf("Stack is corrupt!\n"));
 }
 
 void stack_SQR(stack_t *stack)
 {
-	if (stack_Ok(stack, 1))
+	if (int *tmpNumb = stack_pop(stack))
 	{
-		int tmpNumb = stack_pop(stack);
-		tmpNumb *= tmpNumb;
-		stack_push(stack, tmpNumb);
+		*tmpNumb *= *tmpNumb;
+		stack_push(stack, *tmpNumb);
 	}
-	else (printf("Stack is corrupt!\n"));
 }
 /*
 void stack_SQRT(stack_t *stack)
@@ -280,6 +271,7 @@ int stack_Ok(stack_t *stack,int minOfElement)
 	if (!(stack->headStack)) return 0;
 //	if (!IsBadReadPtr(stack->headStack,sizeof(int))) return 0;
 	if (stack->topOfStack < minOfElement) return 0;
+	if (!minOfElement && (stack->topOfStack == stack->stackSize)) return 0;
 	return 1;
 }
 	
@@ -308,13 +300,13 @@ void stack_push(stack_t *stack, int element)
 	else printf("Stack is corrupt!\n");
 }
 
-int stack_pop(stack_t *stack)
+int * stack_pop(stack_t *stack)
 {
 	if (stack_Ok(stack, 1))
 	{
 		stack->topOfStack--;
-		return stack->headStack[stack->topOfStack];
+		return &(stack->headStack[stack->topOfStack]);
 	}
 	else printf("Stack is corrupt!\n");
-	return 0;
+	return NULL;
 }
