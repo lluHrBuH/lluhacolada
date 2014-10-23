@@ -1,0 +1,9 @@
+add 5;
+metka:
+metka2:
+pop eax
+push eax
+PUSH 10
+jmp metka
+jmp metka2
+exit
