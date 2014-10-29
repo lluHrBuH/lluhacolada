@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <io.h>
-#include <locale>	
+#include <locale>
 #include <assert.h>
 
 #define isNSymbol(x) ((128 <= (unsigned char)(x)))
@@ -125,7 +125,6 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	Onegin();
-	system("pause>>nul");
 	return 0;
 }
 
@@ -134,6 +133,7 @@ void Onegin()
 	int textLength;
 	int errorNumber;
 	char* textOnegin = readStringFromFile(&textLength, &errorNumber);
+	assert(textOnegin);
 	if (!errorNumber)
 	{
 		int PrintToConsole = 0;
@@ -143,12 +143,15 @@ void Onegin()
 		int numberOfLines = countLine(textOnegin, textLength);
 
 		char* * originalText = (char* *)calloc(numberOfLines, sizeof(char* *));
+		assert(originalText);
 		originalText = partitionToLine_and_deleteNewLineSymb(textOnegin, textLength, numberOfLines);
 
 		char* * linesOfSortText = (char* *)calloc(numberOfLines, sizeof(char* *));
+		assert(linesOfSortText);
 		linesOfSortText = sortLineAlphabet(originalText, numberOfLines);
 		 
 		char* * linesOfInvertSortText = (char* *)calloc(numberOfLines, sizeof(char* *));
+		assert(linesOfInvertSortText);
 		linesOfInvertSortText = sortLineInvert(originalText, numberOfLines);
 		if (PrintToConsole == 1)
 		{
@@ -185,6 +188,7 @@ void Onegin()
 void printToFile(char* * arrayOfText, int numberOfLines)
 {
 	FILE *f = fopen(outputFile, "a");
+	assert(f);
 	for (int i = 0; i < numberOfLines; i++)
 	{
 		fprintf(f,"%s\n", arrayOfText[i]);
@@ -206,6 +210,8 @@ void printToConsole(char* * arrayOfText, int numberOfLines)
 
 int compareInverString(const void * a, const void * b)
 {
+	assert(a);
+	assert(b);
 	char * tmpString1 = *(char* *)a;
 	char * tmpString2 = *(char* *)b;
 	int lengthOfString1 = strlen(tmpString1);
@@ -241,7 +247,9 @@ int compareInverString(const void * a, const void * b)
 
 char* * sortLineInvert(char* * arrayOfTextLines, int numberOfLines)
 {
+	assert(arrayOfTextLines);
 	char * *textLines = (char * *)calloc(numberOfLines, sizeof(char *));
+	assert(textLines);
 	memcpy(textLines, arrayOfTextLines, sizeof(char * *)*numberOfLines);
 	qsort(textLines, numberOfLines, sizeof(char* *), compareInverString);
 	return textLines;
@@ -249,7 +257,9 @@ char* * sortLineInvert(char* * arrayOfTextLines, int numberOfLines)
 
 char* * sortLineAlphabet(char* * arrayOfTextLines, int numberOfLines)
 {
+	assert(arrayOfTextLines);
 	char * *textLines = (char * *)calloc(numberOfLines, sizeof(char *));
+	assert(textLines);
 	memcpy(textLines, arrayOfTextLines, sizeof(char * *)*numberOfLines);
 	qsort(textLines, numberOfLines, sizeof(char* *), compareString);
 	return textLines;
@@ -278,8 +288,10 @@ int countLine(char *text,int numberOfcharacter)
 
 char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int numbersOfLine)
 {
+	assert(text);
 	char *tmpText = text;
 	char * * linesOfText = (char * *)calloc(numbersOfLine, sizeof(char *));
+	assert(linesOfText);
 	bool isLineEnd = true;
 	int numberOfLine = 0;
 	linesOfText[numberOfLine] =tmpText;
@@ -299,11 +311,15 @@ char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int nu
 
 char * readStringFromFile(int *textLength, int *errorNumb)
 {
+	assert(textLength);
+	assert(errorNumb);
 	FILE *f = fopen(inputFile, "r");
+	assert(f);
 	if (!(f == NULL))
 	{
 		*textLength = filelength(fileno(f));
 		char *buff = (char *)calloc(*textLength, sizeof(textLength));
+		assert(buff);
 		fread(buff, *textLength, sizeof(char), f);
 		fclose(f);
 		*errorNumb = 0;

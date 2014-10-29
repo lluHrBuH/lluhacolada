@@ -1,0 +1,130 @@
+in eax
+in ebx
+in ecx
+push eax
+push 0
+je aZero
+pop edx
+pop edx
+push ebx
+push 0
+je bZero
+pop edx
+pop edx
+push ecx
+push 0
+je cZero
+push 4
+push eax
+mul
+push ecx
+mul
+push ebx
+sqr
+sub
+push 0
+jbe discNotPlus
+pop edx
+pop edx
+X1:
+push 2
+push eax
+mul
+push ebx
+push edx
+sqrt
+sub
+div
+pop ecx
+out ecx
+X2:
+push 2
+push eax
+mul
+push ebx
+push edx
+sqrt
+push 0
+sub
+sub
+div
+pop ecx
+out ecx
+diskNotPlus:
+je discZero
+push 0
+pop ecx
+out ecx
+discZero:
+push 2
+push eax
+mul
+push ebx
+push 0
+sub
+div
+pop ecx
+out ecx
+aZero:
+push ebx
+push 0
+je abZero
+pop edx
+pop edx
+push ebx
+push ecx
+div
+pop ecx
+push 1
+pop edx
+out edx
+out ecx
+bZero:
+push eax
+push ecx
+push 0
+sub
+div
+push 0
+jb CdivBbelow 
+pop edx
+pop ecx
+push 2
+pop edx
+out edx
+out ecx
+pop ecx
+pop 0
+div
+pop ecx
+out ecx
+CdivBbelow:
+push 0
+pop edx
+out edx
+cZero:
+push 2
+pop edx
+out edx
+push 0
+pop ecx
+out ecx
+push eax
+push ebx
+div
+push 0
+sub
+pop ecx
+out ecx
+abZero:
+push ecx
+push 0
+je abcZero
+push 0
+pop edx
+out edx
+abcZero:
+push 2
+pop edx
+out edx
+exit

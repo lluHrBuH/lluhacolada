@@ -17,6 +17,4 @@ DEF_CMD_(JBE,   15,  -1, { double a = stack_pop(&cpu.stack); double b = stack_po
 DEF_CMD_(JE,    16,  -1, { double a = stack_pop(&cpu.stack); double b = stack_pop(&cpu.stack); if(a == b) EIP = (int)command[EIP + 1]; else EIP += 2; stack_push(&cpu.stack, b); stack_push(&cpu.stack, a); })
 DEF_CMD_(JNE,   17,  -1, { double a = stack_pop(&cpu.stack); double b = stack_pop(&cpu.stack); if(a != b) EIP = (int)command[EIP + 1]; else EIP += 2; stack_push(&cpu.stack, b); stack_push(&cpu.stack, a); })
 DEF_CMD_(CALL,  18,  -1, { stack_push(&cpu.callStack, EIP); EIP =(int) command[EIP + 1]; })
-DEF_CMD_(RET,   19,   0, { EIP = (int)stack_pop(&cpu.callStack); })
-DEF_CMD_(SQR,   20,   0, { int x = stack_pop(&cpu.stack); stack_push(&cpu.stack, x*x); })
-DEF_CMD_(SQRT,  21,   0, { int x = stack_pop(&cpu.stack); stack_push(&cpu.stack, sqrt(x)); })
+DEF_CMD_(RET,   19,  -1, { EIP = (int)stack_pop(&cpu.callStack); })

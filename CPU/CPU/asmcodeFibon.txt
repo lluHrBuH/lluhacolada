@@ -1,0 +1,26 @@
+in eax
+fibon:
+push 1
+je firstNumb
+pop edx ; clean stack
+push 2
+je secondNumb
+pop edx ; clean stack
+pop ebx
+push 1
+push ebx
+sub
+call fibon
+push 2
+push ebx
+sub
+call fibon
+add
+firstNumb:
+secondNumb:
+pop ebx
+push 1
+ret
+pop edx
+out edx
+exit

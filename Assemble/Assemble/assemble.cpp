@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <io.h>
 #include <string.h>
-#include <process.h>
+#include <assert.h>
+
 #define isStringEquivalent(a,b) !strcmpi((a), (b))
 #define withOperator 1
 #define withoutOperator 0
@@ -16,8 +17,8 @@
 #define deltaToOperWithNumb 1
 #define isJumpOrCall -1
 #define OK 1
-const char * inputFile = "asmcode.txt";
-const char * outputFile = "bytecode.txt";
+const char * InputFile = "asmcode.txt";
+const char * OutputFile = "bytecodeFibon.txt";
 
 struct Label_t
 {
@@ -51,29 +52,37 @@ int operandIsRegister(char * operand);
 int findLabel(Label_t *label, char* JmpCallLabel, int numberOfJmpCall, int numbersOfLabel);
 void printToFile(double* byteCode, int numberOfCommand);
 
-#define DEF_CMD_(name, num, pref, code) name = num,
-
 
 int main()
 {
 	int commandLength = -1;
-	int errorNumber;
+	int errorNumber = 0;
 	char* inputCommand = readCommandFromFile(&commandLength, &errorNumber);
 	int numberOfLines = countLine(inputCommand, commandLength);
-	char* * listOfCommands = (char* *)calloc(numberOfLines, sizeof(char* *));
-	listOfCommands = partitionToLine_and_deleteNewLineSymb(inputCommand, commandLength, numberOfLines);
-	convertToByteCode(listOfCommands, numberOfLines, commandLength);
 
-	system("pause>>nul");
+	char* * listOfCommands = (char* *)calloc(numberOfLines, sizeof(char* *));
+	assert(listOfCommands);
+	listOfCommands = partitionToLine_and_deleteNewLineSymb(inputCommand, commandLength, numberOfLines);
+
+	convertToByteCode(listOfCommands, numberOfLines, commandLength);
+	
+	free(inputCommand);
+	free(listOfCommands);
+//	system("pause>>nul");
 
 }
+
 int convertToByteCode(char* * listOfCommands, int numberOfLines, int commandLength)
 {
+	assert(listOfCommands);
 	char *command = nullptr;
 	char *operand = nullptr;
 	double *byteCode = (double *)calloc(commandLength,sizeof(double));
+	assert(byteCode);
 	Label_t *label = (Label_t *)calloc(numberOfLines, sizeof(Label_t));
+	assert(label);
 	char * jumpAndCallLabel = (char *)calloc(commandLength, sizeof(char));
+	assert(jumpAndCallLabel);
 	int numberOfCommand = 0;
 	int numberOfCodeLine = 0;
 	int numbersOfLabel = 0;
@@ -96,25 +105,27 @@ int convertToByteCode(char* * listOfCommands, int numberOfLines, int commandLeng
 		{
 #define DEF_CMD_(name,num,pref,code) case(name): \
 		{byteCode[numberOfCommand] = num; \
-		if (pref == isJumpOrCall) {strcat(jumpAndCallLabel,operand); strcat(jumpAndCallLabel, ":"); byteCode[++numberOfCommand] = -1;}\
+		if (pref == isJumpOrCall) {strcat(jumpAndCallLabel,operand); strcat(jumpAndCallLabel, ":"); byteCode[++numberOfCommand] = -5;}\
 		else if((pref == isRegisterOrNumber) && operandPresent) \
 				if(registr) {byteCode[numberOfCommand]+=deltaToOperWithRegister; byteCode[++numberOfCommand] = registr;}\
 				else {byteCode[numberOfCommand]+=deltaToOperWithNumb; byteCode[++numberOfCommand] = number;}\
 			else if(pref == isRegisterOnly) byteCode[++numberOfCommand] = registr;\
 				else if(operandPresent) byteCode[++numberOfCommand] = number;\
-			numberOfCommand++; numberOfCodeLine++; break;}
+		numberOfCommand++; numberOfCodeLine++; break;}
 
 #include "commands.h"
 #undef DEF_CMD_
 		default:
 		{
+//			sscanf (command, "%[^: \n\t]%*[:]", label);
+
 			if (command[strlen(command)-1] == ':')
 			{
 				label[numbersOfLabel].labelName = (char *)calloc(strlen(command), sizeof(char));
+				assert(label[numbersOfLabel].labelName);
 				memcpy(label[numbersOfLabel].labelName, command, strlen(command) - 1);
-				label[numbersOfLabel].pointToProg = numberOfCodeLine + 1;
+				label[numbersOfLabel].pointToProg = numberOfCommand ;
 				numbersOfLabel++;
-
 			}
 			else return COMMAND_NOT_FOUND;
 		}
@@ -134,8 +145,9 @@ int convertToByteCode(char* * listOfCommands, int numberOfLines, int commandLeng
 
 	for (int i = 0; i < numberOfCommand; i++)
 	{
-#define DEF_CMD_(name,num,pref,code) if((pref == isJumpOrCall)&&(num == byteCode[i])) {int pointToProg = findLabel(label, jumpAndCallLabel, numberOfJumpCall, numbersOfLabel);\
-	if(pointToProg) {byteCode[i+1]=pointToProg; numberOfJumpCall++;}\
+#define DEF_CMD_(name,num,pref,code) if((pref == isJumpOrCall)&&(num == byteCode[i])) \
+				{printf(#name);printf(" i= %d, bytecode[i] =%f \n",i,byteCode[i]);int pointToProg = findLabel(label, jumpAndCallLabel, numberOfJumpCall, numbersOfLabel);\
+	if(pointToProg) {byteCode[i+1]=pointToProg; numberOfJumpCall++; i++;}\
 	else return LABEL_NOT_FOUND;}
 #include "commands.h"
 #undef DEF_CMD_
@@ -161,7 +173,9 @@ int convertToByteCode(char* * listOfCommands, int numberOfLines, int commandLeng
 
 void printToFile(double* byteCode, int numberOfCommand)
 {
-	FILE *f = fopen(outputFile, "w");
+	assert(byteCode);
+	FILE *f = fopen(OutputFile, "wb");
+	assert(f);
 	for (int i = 0; i < numberOfCommand; i++)
 	{
 		fprintf(f, "%f ", byteCode[i]);
@@ -172,6 +186,8 @@ void printToFile(double* byteCode, int numberOfCommand)
 }
 int findLabel(Label_t *label, char* JmpCallLabel, int numberOfJmpCall, int numbersOfLabel)
 {
+	assert(label);
+	assert(JmpCallLabel);
 	int i = 0;
 	char *startOfLabel = JmpCallLabel;
 	while (numberOfJmpCall > 0)
@@ -195,8 +211,10 @@ int findLabel(Label_t *label, char* JmpCallLabel, int numberOfJmpCall, int numbe
 
 int identCommand(char *commandLine, char* *cmd, char* *oprnd)
 {
+	assert(commandLine);
 	int numberOfletter = 0;
 	char * command = (char *)calloc(strlen(commandLine)+1, sizeof(char));
+	assert(command);
 	int endOfCommand = 0;
 	while (commandLine[numberOfletter] != '\0')
 	{
@@ -215,6 +233,7 @@ int identCommand(char *commandLine, char* *cmd, char* *oprnd)
 	if (numberOfletter != strlen(commandLine))
 	{
 		char * operand = (char *)calloc((strlen(commandLine) - endOfCommand + 1), sizeof(char));
+		assert(operand);
 		numberOfletter = endOfCommand;
 		
 		while ((commandLine[numberOfletter] != '\0') && (commandLine[numberOfletter] != ';'))
@@ -231,22 +250,28 @@ int identCommand(char *commandLine, char* *cmd, char* *oprnd)
 		return withoutOperator;
 	}
 }
+
 int operandIsRegister(char * operand)
 {
+	assert(operand);
 #define REGISTER_(name, num) if(isStringEquivalent(operand, #name)) return num;
 #include "registers.h"
 #undef REGISTER_
 	return 0;
 }
+
 int parseCommand(char * command)
 {
+	assert(command);
 #define DEF_CMD_(name, num, pref, code) if(isStringEquivalent(command, #name)) return num;
 #include "commands.h"
 #undef DEF_CMD_
 	return NOTCOMMAND;
 }
+
 int countLine(char *text, int numberOfcharacter)
 {
+	assert(text);
 	int numberOfLine = 0;
 	bool isLineEnd = true;
 	for (int i = 0; i < numberOfcharacter; i++)
@@ -264,6 +289,7 @@ int countLine(char *text, int numberOfcharacter)
 
 char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int numbersOfLine)
 {
+	assert(textLength);
 	char *tmpText = text;
 	char * * linesOfText = (char * *)calloc(numbersOfLine, sizeof(char *));
 	bool isLineEnd = true;
@@ -285,7 +311,10 @@ char* * partitionToLine_and_deleteNewLineSymb(char *text, int textLength, int nu
 
 char * readCommandFromFile(int *commandLength, int *errorNumber)
 {
-	FILE *f = fopen(inputFile, "r");
+	assert(commandLength);
+	assert(errorNumber);
+	FILE *f = fopen(InputFile, "r");
+	assert(f);
 	if (!(f == NULL))
 	{
 		*commandLength = filelength(fileno(f));

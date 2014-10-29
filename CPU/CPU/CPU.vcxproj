@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D9991912-E6C8-42DC-8275-91F56F6166B9}</ProjectGuid>
+    <ProjectGuid>{B1D7C7DF-912B-45AD-8A2F-F3A058272162}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Stack</RootNamespace>
+    <RootNamespace>CPU</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,10 +76,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="stack.cpp" />
+    <ClCompile Include="cpu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\CPU\CPU\commands.h" />
+    <ClInclude Include="commands.h" />
+    <ClInclude Include="registers.h" />
+    <ClInclude Include="stack.h" />
+    <ClInclude Include="stackErrors.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Assemble\Assemble\asmcode.txt" />
+    <Text Include="bytecodeFibon.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

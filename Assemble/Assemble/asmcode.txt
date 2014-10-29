@@ -1,9 +1,26 @@
-add 5;
-metka:
-metka2:
-pop eax
+in eax
 push eax
-PUSH 10
-jmp metka
-jmp metka2
+pop eax
+out eax
+push eax
+push 1
+pop ecx
+call fact
+out ecx
 exit
+fact:
+pop ebx
+out ebx
+push ebx
+push 1
+je finish
+push ecx
+push ebx
+mul
+pop ecx
+push 1
+push ebx
+sub
+call fact
+finish:
+ret
